@@ -6,6 +6,40 @@ const KEYS = {
   SAVED_MEALS:  'mf_saved_meals',
   RECENT_FOODS: 'mf_recent_foods',
   MEAL_SLOTS:   'mf_meal_slots',
+  ONBOARDED:    'mf_onboarded',
+}
+
+// ── Onboarding flag ─────────────────────────────────────────────────────────
+
+export function isOnboarded() {
+  return localStorage.getItem(KEYS.ONBOARDED) === '1'
+}
+
+export function setOnboarded() {
+  localStorage.setItem(KEYS.ONBOARDED, '1')
+}
+
+// ── Migration from old key names ─────────────────────────────────────────────
+
+export function migrateFromOldKeys() {
+  const OLD = {
+    'macrofit_goals':        KEYS.GOALS,
+    'macrofit_diary':        KEYS.DIARY,
+    'macrofit_custom_foods': KEYS.CUSTOM_FOODS,
+    'macrofit_profile':      KEYS.PROFILE,
+    'macrofit_saved_meals':  KEYS.SAVED_MEALS,
+  }
+  for (const [oldKey, newKey] of Object.entries(OLD)) {
+    const oldVal = localStorage.getItem(oldKey)
+    if (oldVal && !localStorage.getItem(newKey)) {
+      localStorage.setItem(newKey, oldVal)
+    }
+    if (oldVal) localStorage.removeItem(oldKey)
+  }
+  // If profile exists but onboarded flag is missing, set it
+  if (!isOnboarded() && localStorage.getItem(KEYS.PROFILE)) {
+    setOnboarded()
+  }
 }
 
 // ── Meal Slots (configurable) ───────────────────────────────────────────────

@@ -7,14 +7,14 @@ import Dashboard from './pages/Dashboard'
 import Diary from './pages/Diary'
 import History from './pages/History'
 import Profile from './pages/Profile'
-import { hasProfile } from './utils/storage'
+import { isOnboarded, setOnboarded } from './utils/storage'
 
 export default function App() {
   const [unlocked, setUnlocked] = useState(isUnlocked)
-  const [onboarded, setOnboarded] = useState(hasProfile)
+  const [onboarded, setOnboardedState] = useState(isOnboarded)
 
   if (!unlocked) return <PinLock onUnlock={() => setUnlocked(true)} />
-  if (!onboarded) return <Onboarding onDone={() => setOnboarded(true)} />
+  if (!onboarded) return <Onboarding onDone={() => { setOnboarded(); setOnboardedState(true) }} />
 
   return (
     <HashRouter>
