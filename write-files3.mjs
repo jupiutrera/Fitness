@@ -1,4 +1,7 @@
-import { useState, useCallback } from 'react'
+import { writeFileSync } from 'fs'
+const base = 'C:/Users/utrerj/Documents/GitHub/Fitness/src'
+
+writeFileSync(base + '/pages/Dashboard.jsx', `import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import MacroRing from '../components/MacroRing'
 import MacroBar from '../components/MacroBar'
@@ -300,3 +303,6 @@ export default function Dashboard() {
     </div>
   )
 }
+`)
+
+console.log('Dashboard written OK')

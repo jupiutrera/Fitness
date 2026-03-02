@@ -7,7 +7,10 @@
       "Bash(npm install)",
       "Bash(npm run build)",
       "Bash(node -e \":*)",
-      "Bash(node write-files.mjs)"
+      "Bash(node write-files.mjs)",
+      "Bash(npm install @zxing/browser)",
+      "Bash(node write-files2.mjs)",
+      "Bash(node write-files3.mjs)"
     ]
   }
 }

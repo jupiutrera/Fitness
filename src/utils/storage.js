@@ -1,9 +1,31 @@
 const KEYS = {
-  GOALS:       'mf_goals',
-  DIARY:       'mf_diary',
-  CUSTOM_FOODS:'mf_custom_foods',
-  PROFILE:     'mf_profile',
-  SAVED_MEALS: 'mf_saved_meals',
+  GOALS:        'mf_goals',
+  DIARY:        'mf_diary',
+  CUSTOM_FOODS: 'mf_custom_foods',
+  PROFILE:      'mf_profile',
+  SAVED_MEALS:  'mf_saved_meals',
+  RECENT_FOODS: 'mf_recent_foods',
+  MEAL_SLOTS:   'mf_meal_slots',
+}
+
+// ── Meal Slots (configurable) ───────────────────────────────────────────────
+
+export const DEFAULT_MEAL_SLOTS = [
+  { key: 'desayuno', label: 'Desayuno', time: '06–11h' },
+  { key: 'almuerzo', label: 'Almuerzo', time: '12–15h' },
+  { key: 'cena',     label: 'Cena',     time: '19–22h' },
+  { key: 'snacks',   label: 'Snacks',   time: 'entre comidas' },
+]
+
+export function getMealSlots() {
+  try {
+    const raw = localStorage.getItem(KEYS.MEAL_SLOTS)
+    return raw ? JSON.parse(raw) : DEFAULT_MEAL_SLOTS
+  } catch { return DEFAULT_MEAL_SLOTS }
+}
+
+export function saveMealSlots(slots) {
+  localStorage.setItem(KEYS.MEAL_SLOTS, JSON.stringify(slots))
 }
 
 // ── Profile ────────────────────────────────────────────────────────────────
@@ -74,6 +96,7 @@ export function addFoodToMeal(dateStr, meal, foodEntry) {
   if (!dayLog.meals[meal]) dayLog.meals[meal] = []
   dayLog.meals[meal].push({ ...foodEntry, id: crypto.randomUUID(), addedAt: Date.now() })
   saveDayLog(dateStr, dayLog)
+  pushRecentFood(foodEntry)
 }
 
 export function removeFoodFromMeal(dateStr, meal, foodId) {
@@ -151,6 +174,21 @@ export function computeTotals(dayLog) {
       carbs:    acc.carbs    + (f.carbs    ?? 0),
       fat:      acc.fat      + (f.fat      ?? 0),
     }), empty)
+}
+
+// ── Recent Foods ────────────────────────────────────────────────────────────
+
+export function getRecentFoods() {
+  try {
+    const raw = localStorage.getItem(KEYS.RECENT_FOODS)
+    return raw ? JSON.parse(raw) : []
+  } catch { return [] }
+}
+
+export function pushRecentFood(food) {
+  const recents = getRecentFoods().filter((f) => f.name !== food.name)
+  recents.unshift(food)
+  localStorage.setItem(KEYS.RECENT_FOODS, JSON.stringify(recents.slice(0, 15)))
 }
 
 export function getStreak() {
