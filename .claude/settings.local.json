@@ -5,7 +5,9 @@
       "Bash(npm create vite@latest . -- --template react)",
       "Bash(npx create-vite@latest . --template react --force)",
       "Bash(npm install)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(node -e \":*)",
+      "Bash(node write-files.mjs)"
     ]
   }
 }

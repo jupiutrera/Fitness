@@ -1,25 +1,48 @@
 const KEYS = {
-  GOALS: 'macrofit_goals',
-  DIARY: 'macrofit_diary',
-  CUSTOM_FOODS: 'macrofit_custom_foods',
+  GOALS:       'mf_goals',
+  DIARY:       'mf_diary',
+  CUSTOM_FOODS:'mf_custom_foods',
+  PROFILE:     'mf_profile',
+  SAVED_MEALS: 'mf_saved_meals',
+}
+
+// ── Profile ────────────────────────────────────────────────────────────────
+
+export const DEFAULT_PROFILE = {
+  name: '',
+  sex: 'male',
+  age: null,
+  weightKg: null,
+  heightCm: null,
+  activityKey: 'moderate',
+  goalKey: 'maintain',
+}
+
+export function getProfile() {
+  try {
+    const raw = localStorage.getItem(KEYS.PROFILE)
+    return raw ? { ...DEFAULT_PROFILE, ...JSON.parse(raw) } : DEFAULT_PROFILE
+  } catch { return DEFAULT_PROFILE }
+}
+
+export function saveProfile(profile) {
+  localStorage.setItem(KEYS.PROFILE, JSON.stringify(profile))
+}
+
+export function hasProfile() {
+  const p = getProfile()
+  return !!(p.age && p.weightKg && p.heightCm)
 }
 
 // ── Goals ──────────────────────────────────────────────────────────────────
 
-export const DEFAULT_GOALS = {
-  calories: 2000,
-  protein: 150,
-  carbs: 200,
-  fat: 65,
-}
+export const DEFAULT_GOALS = { calories: 2000, protein: 150, carbs: 200, fat: 65 }
 
 export function getGoals() {
   try {
     const raw = localStorage.getItem(KEYS.GOALS)
     return raw ? { ...DEFAULT_GOALS, ...JSON.parse(raw) } : DEFAULT_GOALS
-  } catch {
-    return DEFAULT_GOALS
-  }
+  } catch { return DEFAULT_GOALS }
 }
 
 export function saveGoals(goals) {
@@ -32,9 +55,7 @@ export function getDiary() {
   try {
     const raw = localStorage.getItem(KEYS.DIARY)
     return raw ? JSON.parse(raw) : {}
-  } catch {
-    return {}
-  }
+  } catch { return {} }
 }
 
 export function getDayLog(dateStr) {
@@ -62,37 +83,46 @@ export function removeFoodFromMeal(dateStr, meal, foodId) {
   saveDayLog(dateStr, dayLog)
 }
 
-export function updateFoodInMeal(dateStr, meal, foodId, updates) {
-  const dayLog = getDayLog(dateStr)
-  if (!dayLog.meals[meal]) return
-  dayLog.meals[meal] = dayLog.meals[meal].map((f) =>
-    f.id === foodId ? { ...f, ...updates } : f,
-  )
-  saveDayLog(dateStr, dayLog)
-}
-
 // ── Custom Foods ────────────────────────────────────────────────────────────
 
 export function getCustomFoods() {
   try {
     const raw = localStorage.getItem(KEYS.CUSTOM_FOODS)
     return raw ? JSON.parse(raw) : []
-  } catch {
-    return []
-  }
+  } catch { return [] }
 }
 
 export function saveCustomFood(food) {
   const foods = getCustomFoods()
-  const existing = foods.findIndex((f) => f.id === food.id)
-  if (existing >= 0) foods[existing] = food
-  else foods.unshift({ ...food, id: crypto.randomUUID() })
+  const idx = foods.findIndex((f) => f.id === food.id)
+  if (idx >= 0) foods[idx] = food
+  else foods.unshift({ ...food, id: food.id ?? crypto.randomUUID() })
   localStorage.setItem(KEYS.CUSTOM_FOODS, JSON.stringify(foods))
 }
 
 export function deleteCustomFood(id) {
-  const foods = getCustomFoods().filter((f) => f.id !== id)
-  localStorage.setItem(KEYS.CUSTOM_FOODS, JSON.stringify(foods))
+  localStorage.setItem(KEYS.CUSTOM_FOODS, JSON.stringify(getCustomFoods().filter((f) => f.id !== id)))
+}
+
+// ── Saved Meal Combos ───────────────────────────────────────────────────────
+
+export function getSavedMeals() {
+  try {
+    const raw = localStorage.getItem(KEYS.SAVED_MEALS)
+    return raw ? JSON.parse(raw) : []
+  } catch { return [] }
+}
+
+export function saveMealCombo(combo) {
+  const meals = getSavedMeals()
+  const idx = meals.findIndex((m) => m.id === combo.id)
+  if (idx >= 0) meals[idx] = combo
+  else meals.unshift({ ...combo, id: combo.id ?? crypto.randomUUID(), createdAt: Date.now() })
+  localStorage.setItem(KEYS.SAVED_MEALS, JSON.stringify(meals))
+}
+
+export function deleteSavedMeal(id) {
+  localStorage.setItem(KEYS.SAVED_MEALS, JSON.stringify(getSavedMeals().filter((m) => m.id !== id)))
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -102,14 +132,12 @@ export function todayStr() {
 }
 
 export function dateLabel(dateStr) {
-  const today = todayStr()
+  const today     = todayStr()
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
-  if (dateStr === today) return 'Hoy'
+  if (dateStr === today)     return 'Hoy'
   if (dateStr === yesterday) return 'Ayer'
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('es-ES', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'short',
+    weekday: 'long', day: 'numeric', month: 'short',
   })
 }
 
@@ -119,8 +147,23 @@ export function computeTotals(dayLog) {
     .flat()
     .reduce((acc, f) => ({
       calories: acc.calories + (f.calories ?? 0),
-      protein: acc.protein + (f.protein ?? 0),
-      carbs: acc.carbs + (f.carbs ?? 0),
-      fat: acc.fat + (f.fat ?? 0),
+      protein:  acc.protein  + (f.protein  ?? 0),
+      carbs:    acc.carbs    + (f.carbs    ?? 0),
+      fat:      acc.fat      + (f.fat      ?? 0),
     }), empty)
+}
+
+export function getStreak() {
+  const diary = getDiary()
+  let streak = 0
+  let date = new Date()
+  for (let i = 0; i < 365; i++) {
+    const key = date.toISOString().slice(0, 10)
+    const log = diary[key]
+    const hasFood = log && Object.values(log.meals ?? {}).flat().length > 0
+    if (!hasFood) break
+    streak++
+    date = new Date(date.getTime() - 86400000)
+  }
+  return streak
 }
