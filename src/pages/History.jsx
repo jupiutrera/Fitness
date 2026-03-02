@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getDiary, computeTotals, dateLabel, getGoals } from '../utils/storage'
+import { getDiary, computeTotals, getGoals } from '../utils/storage'
 
 const MEALS = [
   { key: 'desayuno', label: 'Desayuno' },
@@ -32,14 +32,9 @@ export default function History() {
         <div className="px-5 pt-8 pb-4">
           <h1 className="text-2xl font-black text-white">Historial</h1>
         </div>
-        <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-8">
-          <div className="w-16 h-16 rounded-2xl bg-bg-card border border-bg-border flex items-center justify-center">
-            <svg className="w-7 h-7 text-gray-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
           <p className="text-gray-400 font-semibold">Sin registros aún</p>
-          <p className="text-gray-600 text-sm">Empieza a registrar lo que comes y aparecerá aquí.</p>
+          <p className="text-gray-600 text-sm mt-1">Empieza a registrar lo que comes y aparecerá aquí.</p>
         </div>
       </div>
     )
@@ -71,7 +66,9 @@ export default function History() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-white text-sm capitalize">{dateLabel(date)}</p>
+                  <p className="font-semibold text-white text-sm capitalize">
+                    {d.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}
+                  </p>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="flex-1 h-1.5 bg-bg-card2 rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all"

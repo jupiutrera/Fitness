@@ -10,7 +10,7 @@ import SearchModal from '../components/SearchModal'
 function Section({ title, children }) {
   return (
     <div className="mb-5">
-      <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold px-1 mb-2">{title}</p>
+      <p className="text-sm font-semibold text-gray-400 px-1 mb-2">{title}</p>
       <div className="card overflow-hidden">{children}</div>
     </div>
   )
@@ -73,10 +73,10 @@ function CustomFoodForm({ onSave, onCancel, initial }) {
   )
 }
 
-function MacroInput({ label, emoji, value, onChange, unit = 'g', step = 5 }) {
+function MacroInput({ label, value, onChange, unit = 'g', step = 5 }) {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-b border-bg-border last:border-0">
-      <span className="text-sm text-gray-300">{emoji} {label}</span>
+      <span className="text-sm text-gray-300">{label}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(Math.max(0, value - step))} className="w-8 h-8 rounded-full bg-bg-card2 border border-bg-border text-white text-lg font-light tap">−</button>
         <span className="w-16 text-center text-sm font-semibold text-white">{value} <span className="text-xs text-gray-600">{unit}</span></span>
@@ -241,7 +241,7 @@ export default function Profile() {
       <div className="px-4 pt-8 pb-5">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center flex-shrink-0">
-            <span className="text-2xl font-black gradient-text">
+            <span className="text-2xl font-black text-violet-300">
               {profile.name ? profile.name[0].toUpperCase() : 'U'}
             </span>
           </div>
@@ -257,18 +257,22 @@ export default function Profile() {
 
         {/* Stats row */}
         {tdee && (
-          <div className="grid grid-cols-3 gap-2 mt-5">
-            {[
-              { label: 'TDEE', val: `${tdee.tdee}`, unit: 'kcal', color: '#f59e0b' },
-              { label: 'BMR',  val: `${tdee.bmr}`,  unit: 'kcal', color: '#8b5cf6' },
-              { label: 'IMC',  val: bmiVal ? `${bmiVal}` : '-', unit: bmiInfo?.label ?? '', color: bmiInfo?.color ?? '#6b7280' },
-            ].map(({ label, val, unit, color }) => (
-              <div key={label} className="card p-3 text-center">
-                <p className="text-lg font-bold" style={{ color }}>{val}</p>
-                <p className="text-xs text-gray-600 leading-tight">{label}</p>
-                <p className="text-xs font-medium" style={{ color: color + '99' }}>{unit}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-5 gap-2 mt-5">
+            <div className="col-span-2 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-3 text-center">
+              <p className="text-lg font-bold" style={{ color: '#f59e0b' }}>{tdee.tdee}</p>
+              <p className="text-xs text-gray-600 leading-tight">TDEE</p>
+              <p className="text-xs font-medium" style={{ color: '#f59e0b99' }}>kcal</p>
+            </div>
+            <div className="col-span-2 card p-3 text-center">
+              <p className="text-lg font-bold" style={{ color: '#8b5cf6' }}>{tdee.bmr}</p>
+              <p className="text-xs text-gray-600 leading-tight">BMR</p>
+              <p className="text-xs font-medium" style={{ color: '#8b5cf699' }}>kcal</p>
+            </div>
+            <div className="col-span-1 card p-3 text-center">
+              <p className="text-lg font-bold" style={{ color: bmiInfo?.color ?? '#6b7280' }}>{bmiVal ? `${bmiVal}` : '-'}</p>
+              <p className="text-xs text-gray-600 leading-tight">IMC</p>
+              <p className="text-xs font-medium" style={{ color: (bmiInfo?.color ?? '#6b7280') + '99' }}>{bmiInfo?.label ?? ''}</p>
+            </div>
           </div>
         )}
       </div>
@@ -286,15 +290,17 @@ export default function Profile() {
             />
           </div>
           <div className="flex border-b border-bg-border">
-            {['male','female'].map((s) => (
+            {['male','female'].map((s, i) => (
               <button
                 key={s}
                 onClick={() => updateProfile('sex', s)}
                 className={`flex-1 py-3 text-sm font-semibold transition-all tap ${
+                  i === 0 ? 'border-r border-bg-border' : ''
+                } ${
                   profile.sex === s ? 'text-violet-400' : 'text-gray-500'
                 }`}
               >
-                {s === 'male' ? '♂ Hombre' : '♀ Mujer'}
+                {s === 'male' ? 'Hombre' : 'Mujer'}
               </button>
             ))}
           </div>
@@ -333,7 +339,7 @@ export default function Profile() {
                       : 'bg-bg-card2 border border-bg-border text-gray-400'
                   }`}
                 >
-                  {a.emoji} {a.label}
+                  {a.label}
                 </button>
               ))}
             </div>
@@ -351,7 +357,7 @@ export default function Profile() {
                       : 'bg-bg-card2 border border-bg-border text-gray-400'
                   }`}
                 >
-                  {g.emoji} {g.label}
+                  {g.label}
                 </button>
               ))}
             </div>
@@ -371,10 +377,10 @@ export default function Profile() {
               </button>
             </div>
           )}
-          <MacroInput label="Calorías"      emoji="🔥" value={goals.calories} onChange={(v) => setGoals((g) => ({ ...g, calories: v }))} unit="kcal" step={50} />
-          <MacroInput label="Proteína"      emoji="💪" value={goals.protein}  onChange={(v) => setGoals((g) => ({ ...g, protein: v }))}  />
-          <MacroInput label="Carbohidratos" emoji="🌾" value={goals.carbs}    onChange={(v) => setGoals((g) => ({ ...g, carbs: v }))}    />
-          <MacroInput label="Grasas"        emoji="🧈" value={goals.fat}      onChange={(v) => setGoals((g) => ({ ...g, fat: v }))}      />
+          <MacroInput label="Calorías"      value={goals.calories} onChange={(v) => setGoals((g) => ({ ...g, calories: v }))} unit="kcal" step={50} />
+          <MacroInput label="Proteína"      value={goals.protein}  onChange={(v) => setGoals((g) => ({ ...g, protein: v }))}  />
+          <MacroInput label="Carbohidratos" value={goals.carbs}    onChange={(v) => setGoals((g) => ({ ...g, carbs: v }))}    />
+          <MacroInput label="Grasas"        value={goals.fat}      onChange={(v) => setGoals((g) => ({ ...g, fat: v }))}      />
           <div className="px-4 py-3">
             <button
               onClick={handleSaveGoals}

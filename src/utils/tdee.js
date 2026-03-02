@@ -4,17 +4,17 @@
  */
 
 export const ACTIVITY_LEVELS = [
-  { key: 'sedentary',   label: 'Sedentario',     desc: 'Poco o ningún ejercicio',           multiplier: 1.2,   emoji: '🛋️' },
-  { key: 'light',       label: 'Ligero',          desc: 'Ejercicio 1-3 días/semana',         multiplier: 1.375, emoji: '🚶' },
-  { key: 'moderate',    label: 'Moderado',        desc: 'Ejercicio 3-5 días/semana',         multiplier: 1.55,  emoji: '🏃' },
-  { key: 'active',      label: 'Activo',          desc: 'Ejercicio 6-7 días/semana',         multiplier: 1.725, emoji: '💪' },
-  { key: 'very_active', label: 'Muy activo',      desc: 'Trabajo físico intenso + ejercicio',multiplier: 1.9,   emoji: '🔥' },
+  { key: 'sedentary',   label: 'Sedentario',     desc: 'Poco o ningún ejercicio',           multiplier: 1.2   },
+  { key: 'light',       label: 'Ligero',          desc: 'Ejercicio 1-3 días/semana',         multiplier: 1.375 },
+  { key: 'moderate',    label: 'Moderado',        desc: 'Ejercicio 3-5 días/semana',         multiplier: 1.55  },
+  { key: 'active',      label: 'Activo',          desc: 'Ejercicio 6-7 días/semana',         multiplier: 1.725 },
+  { key: 'very_active', label: 'Muy activo',      desc: 'Trabajo físico intenso + ejercicio',multiplier: 1.9   },
 ]
 
 export const GOALS = [
-  { key: 'cut',    label: 'Definición',    desc: 'Perder grasa manteniendo músculo', emoji: '🔻', kcalDelta: -0.20 },
-  { key: 'maintain', label: 'Mantenimiento', desc: 'Mantener peso y composición',   emoji: '⚖️', kcalDelta: 0    },
-  { key: 'bulk',   label: 'Volumen',       desc: 'Ganar masa muscular',              emoji: '📈', kcalDelta: +0.12 },
+  { key: 'cut',    label: 'Definición',    desc: 'Perder grasa manteniendo músculo', kcalDelta: -0.20 },
+  { key: 'maintain', label: 'Mantenimiento', desc: 'Mantener peso y composición',   kcalDelta: 0    },
+  { key: 'bulk',   label: 'Volumen',       desc: 'Ganar masa muscular',              kcalDelta: +0.12 },
 ]
 
 /** Protein g per kg of bodyweight by goal */

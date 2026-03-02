@@ -126,7 +126,7 @@ export default function Dashboard() {
       <div className="px-5 pt-8 pb-5">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs text-gray-600 font-medium uppercase tracking-widest">{greeting}</p>
+            <p className="text-xs text-gray-600 font-medium">{greeting}</p>
             <h1 className="text-3xl font-black text-white mt-0.5 leading-none">
               {profile.name || 'Hoy'}
             </h1>
@@ -136,7 +136,9 @@ export default function Dashboard() {
           </div>
           {streak > 1 && (
             <div className="flex items-center gap-1.5 border border-orange-500/30 bg-orange-500/8 rounded-2xl px-3 py-2">
-              <span className="text-base">🔥</span>
+              <svg className="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C9.5 7 7 8.5 7 13a5 5 0 0010 0c0-4.5-2.5-6-5-11z"/>
+              </svg>
               <div className="text-right">
                 <p className="text-sm font-black text-orange-400 leading-none">{streak}</p>
                 <p className="text-xs text-orange-600 leading-none">días</p>
@@ -147,7 +149,7 @@ export default function Dashboard() {
       </div>
 
       {/* Calories + macros block */}
-      <div className="mx-5 border border-bg-border rounded-3xl overflow-hidden">
+      <div className="mx-5 border border-bg-border rounded-2xl overflow-hidden">
         {/* Top: ring */}
         <div className="flex items-center justify-center py-6 px-5 border-b border-bg-border">
           <MacroRing consumed={totals.calories} goal={goals.calories} />
@@ -176,14 +178,14 @@ export default function Dashboard() {
       {/* Meals section */}
       <div className="mt-6 px-5">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Comidas</p>
+          <p className="text-sm font-semibold text-gray-400">Comidas</p>
           <button onClick={() => setEditSlots(true)}
             className="text-xs text-gray-600 hover:text-white transition-colors tap">
             Editar
           </button>
         </div>
 
-        <div className="border border-bg-border rounded-3xl overflow-hidden divide-y divide-bg-border">
+        <div className="border border-bg-border rounded-2xl overflow-hidden divide-y divide-bg-border">
           {slots.map(({ key, label, time }) => {
             const items    = dayLog.meals?.[key] ?? []
             const mealKcal = items.reduce((s, f) => s + (f.calories ?? 0), 0)
@@ -255,10 +257,10 @@ export default function Dashboard() {
                 )}
 
                 {!isOpen && (
-                  <div className="border-t border-bg-border">
+                  <div className="flex justify-end px-3 py-2 border-t border-bg-border">
                     <button
                       onClick={() => { setExpanded((e) => ({ ...e, [key]: true })); setModal(key) }}
-                      className="w-full flex items-center gap-2 px-4 py-2.5 text-gray-600 hover:text-violet-400 text-xs font-medium transition-colors tap">
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-600 hover:text-violet-400 text-xs font-medium transition-colors tap">
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                       </svg>

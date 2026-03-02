@@ -31,7 +31,7 @@ export default function MacroRing({ consumed, goal }) {
         <span className="text-4xl font-black text-white leading-none">{Math.round(consumed)}</span>
         <span className="text-xs text-gray-600 mt-0.5 font-medium">/ {Math.round(goal)} kcal</span>
         <span className={`text-xs font-bold mt-1.5 px-2 py-0.5 rounded-full ${
-          over ? 'bg-red-500/15 text-red-400' : 'bg-violet-500/10 text-violet-400'
+          over ? 'bg-red-500/15 text-red-400' : 'bg-emerald-500/10 text-emerald-400'
         }`}>
           {over ? `+${Math.round(consumed - goal)}` : `-${Math.round(remaining)}`} kcal
         </span>

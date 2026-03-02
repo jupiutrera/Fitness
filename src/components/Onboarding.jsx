@@ -30,7 +30,7 @@ export default function Onboarding({ onDone }) {
   const steps = [
     // 0 — Welcome
     <div key={0} className="flex flex-col items-center text-center animate-slide-up">
-      <div className="w-20 h-20 rounded-3xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center mb-6">
+      <div className="w-20 h-20 rounded-2xl bg-violet-600/20 border border-violet-600/30 flex items-center justify-center mb-6">
         <span className="text-4xl font-black gradient-text">M</span>
       </div>
       <h1 className="text-3xl font-bold text-white mb-2">Bienvenido a MacroFit</h1>
@@ -57,7 +57,7 @@ export default function Onboarding({ onDone }) {
                   : 'bg-bg-card border-bg-border text-gray-400'
               }`}
             >
-              {s === 'male' ? '♂ Hombre' : '♀ Mujer'}
+              {s === 'male' ? 'Hombre' : 'Mujer'}
             </button>
           ))}
         </div>
@@ -106,7 +106,9 @@ export default function Onboarding({ onDone }) {
                 : 'bg-bg-card border-bg-border text-gray-300'
             }`}
           >
-            <span className="text-2xl">{a.emoji}</span>
+            <div className="w-10 h-10 rounded-xl bg-violet-600/10 border border-violet-600/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-sm font-bold text-violet-400">{a.label.charAt(0)}</span>
+            </div>
             <div>
               <p className="font-semibold text-sm">{a.label}</p>
               <p className="text-xs text-gray-500">{a.desc}</p>
@@ -138,7 +140,9 @@ export default function Onboarding({ onDone }) {
                 : 'bg-bg-card border-bg-border text-gray-300'
             }`}
           >
-            <span className="text-3xl">{g.emoji}</span>
+            <div className="w-12 h-12 rounded-xl bg-violet-600/10 border border-violet-600/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-base font-bold text-violet-400">{g.label.charAt(0)}</span>
+            </div>
             <div>
               <p className="font-bold">{g.label}</p>
               <p className="text-xs text-gray-500">{g.desc}</p>
@@ -208,9 +212,11 @@ export default function Onboarding({ onDone }) {
   return (
     <div className="min-h-screen bg-bg flex flex-col px-6 py-8">
       {/* Progress bar */}
-      <div className="flex gap-1.5 mb-8">
+      <div className="flex gap-1.5 mb-8 items-center">
         {steps.map((_, i) => (
-          <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-300 ${i <= step ? 'bg-violet-500' : 'bg-bg-border'}`} />
+          <div key={i} className={`h-2 rounded-full transition-all duration-300 ${
+            i === step ? 'w-6 bg-violet-500' : i < step ? 'w-2 bg-violet-500' : 'w-2 bg-bg-border'
+          }`} />
         ))}
       </div>
 
